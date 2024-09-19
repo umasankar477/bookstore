@@ -1,0 +1,19 @@
+_schema-version: "2.1"
+ID: cap1
+version: 0.0.1
+modules:
+- name: dbhana
+  type: hdb
+  path: dbhana
+  requires:
+  - name: hdi_dbhana
+    properties:
+      TARGET_CONTAINER: ~{hdi-container-name}
+resources:
+- name: hdi_dbhana
+  type: com.sap.xs.hdi-container
+  parameters:
+    config:
+      schema: 'hana '
+  properties:
+    hdi-container-name: ${service-name}

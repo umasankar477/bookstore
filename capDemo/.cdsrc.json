@@ -4,11 +4,5 @@
     },
     "dependencies": {
         "@cap-js/hana": "^1"
-    },
-    "requires": {
-        "[production]": {
-            "db": "hana",
-            "auth": "xsuaa"
-        }
     }
 }

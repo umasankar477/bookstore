@@ -1,0 +1,36 @@
+package customer.cap4.handlers;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.stereotype.Component;
+
+import com.sap.cds.services.cds.CdsCreateEventContext;
+import com.sap.cds.services.cds.CdsReadEventContext;
+import com.sap.cds.services.cds.CqnService;
+import com.sap.cds.services.handler.EventHandler;
+import com.sap.cds.services.handler.annotations.On;
+import com.sap.cds.services.handler.annotations.ServiceName;
+
+@Component
+@ServiceName("AdminService")
+public class AdminService implements EventHandler{
+
+    private Map<Object, Map<String, Object>> products = new HashMap<>();
+    
+    /**
+     * @param context
+     */
+    @On(event = CqnService.EVENT_CREATE, entity = "AdminService.Books")
+    public void onCreate(CdsCreateEventContext context){
+        context.getCqn().entries().forEach(e->products.put(e.get("ID"),e));
+     
+    }
+    @On(event = CqnService.EVENT_READ, entity = "AdminService.Books")
+    public void onCreate(CdsReadEventContext context){
+        context.setResult(products.values());
+     
+    }
+
+
+}

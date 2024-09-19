@@ -1,11 +1,11 @@
 _schema-version: 3.3.0
-ID: cap5
+ID: cap4
 version: 1.0.0-SNAPSHOT
 description: "A simple CAP project."
 parameters:
   enable-parallel-deployments: true
 modules:
-  - name: cap5-srv
+  - name: cap4-srv
     type: java
     path: srv
     parameters:
@@ -26,15 +26,16 @@ modules:
         properties:
           srv-url: ${default-url}
     requires:
-      - name: cap5-db
-      - name: cap5-auth
-      - name: app-api
-        properties:
-          CDS_MULTITENANCY_APPUI_URL: ~{url}
+      []
+  - name: cap4-srv
+    type: java
+    path: gen/srv
+    requires:
+      - name: cap4-db
 
-  - name: cap5-db-deployer
+  - name: cap4-db-deployer
     type: hdb
-    path: db
+    path: gen/db
     parameters:
       buildpack: nodejs_buildpack
     build-parameters:
@@ -42,40 +43,11 @@ modules:
       commands:
         - npm run build
     requires:
-      - name: cap5-db
-
-  - name: cap5
-    type: approuter.nodejs
-    path: app/router
-    parameters:
-      keep-existing-routes: true
-      disk-quota: 256M
-      memory: 256M
-    requires:
-      - name: srv-api
-        group: destinations
-        properties:
-          name: srv-api # must be used in xs-app.json as well
-          url: ~{srv-url}
-          forwardAuthToken: true
-      - name: cap5-auth
-    provides:
-      - name: app-api
-        properties:
-          url: ${default-url}
+      - name: cap4-db
 
 resources:
-  - name: cap5-db
+  - name: cap4-db
     type: com.sap.xs.hdi-container
     parameters:
       service: hana
       service-plan: hdi-shared
-  - name: cap5-auth
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: xsuaa
-      service-plan: application
-      path: ./xs-security.json
-      config:
-        xsappname: cap5-${org}-${space}
-        tenant-mode: dedicated
